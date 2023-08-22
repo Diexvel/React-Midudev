@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import './App.css'
 import { Square } from './componet/square'
-import { TURNS, WINNER_COMBOS } from './const'
-
+import { TURNS } from './const'
+import { checkWinner } from './logic/Board'
+import { Winner } from './componet/Winner'
 
 function App() {
 
@@ -12,19 +13,7 @@ function App() {
 
   const [winner, setWinner] = useState(null)
 
-  const checkWinner = (boardToCheck) =>{
-    for(const combo of WINNER_COMBOS){
-      const [a,b,c] = combo
-      if(
-        boardToCheck[a] &&
-        boardToCheck[a] === boardToCheck[b] &&
-        boardToCheck[a] === boardToCheck[c]
-      ){
-        return boardToCheck[a]
-      }
-    }
-    return null
-  }
+ 
 
   const checkEndGame = (newBoard) =>{
     return newBoard.every((square) => square !== null)
@@ -45,6 +34,8 @@ function App() {
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
+
+    
 
     const newWinner = checkWinner(newBoard)
     if (newWinner){
@@ -86,30 +77,7 @@ function App() {
     </Square>
   </section>
 
-    {
-      winner != null && (
-        <section className='winner'>
-          <div className='text'>
-            <h2>
-              {
-                winner === false
-                ? 'El Juego Terminó en Empate'
-                : 'Ganó' 
-              }
-            </h2>
-            
-            <header className='win'>
-              {winner && <Square>{winner}</Square>}
-            </header>
-
-              <footer>
-                <button onClick={resetGame}>Empezar de Nuevo</button>
-              </footer>
-
-          </div>
-        </section>
-      )
-    }
+<Winner resetGame={resetGame} winner={winner}></Winner>    
 </main>
   )
 }
